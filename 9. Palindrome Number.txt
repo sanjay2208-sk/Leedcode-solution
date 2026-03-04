@@ -1,0 +1,51 @@
+9. Palindrome Number
+Solved
+Easy
+Topics
+premium lock icon
+Companies
+Hint
+Given an integer x, return true if x is a palindrome, and false otherwise.
+
+ 
+
+Example 1:
+
+Input: x = 121
+Output: true
+Explanation: 121 reads as 121 from left to right and from right to left.
+Example 2:
+
+Input: x = -121
+Output: false
+Explanation: From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.
+Example 3:
+
+Input: x = 10
+Output: false
+Explanation: Reads 01 from right to left. Therefore it is not a palindrome.
+
+
+
+class Solution {
+    public boolean isPalindrome(int x) {
+        // Special cases:
+        // 1. Negative numbers are not palindromes (e.g., -121)
+        // 2. Numbers ending in 0 are not palindromes, unless the number is 0 itself
+        if (x < 0 || (x % 10 == 0 && x != 0)) {
+            return false;
+        }
+
+        int revertedNumber = 0;
+        // Keep reversing digits until we reach the middle of the number
+        while (x > revertedNumber) {
+            revertedNumber = (revertedNumber * 10) + (x % 10);
+            x /= 10;
+        }
+
+        // For even-length numbers (e.g., 1221): x=12, revertedNumber=12 -> true
+        // For odd-length numbers (e.g., 121): x=1, revertedNumber=12 -> true
+        // (We use revertedNumber/10 to get rid of the middle digit)
+        return x == revertedNumber || x == revertedNumber / 10;
+    }
+}
