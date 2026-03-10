@@ -1,0 +1,70 @@
+44. Wildcard Matching
+Solved
+Hard
+Topics
+premium lock icon
+Companies
+Given an input string (s) and a pattern (p), implement wildcard pattern matching with support for '?' and '*' where:
+
+'?' Matches any single character.
+'*' Matches any sequence of characters (including the empty sequence).
+The matching should cover the entire input string (not partial).
+
+ 
+
+Example 1:
+
+Input: s = "aa", p = "a"
+Output: false
+Explanation: "a" does not match the entire string "aa".
+Example 2:
+
+Input: s = "aa", p = "*"
+Output: true
+Explanation: '*' matches any sequence.
+Example 3:
+
+Input: s = "cb", p = "?a"
+Output: false
+Explanation: '?' matches 'c', but the second letter is 'a', which does not match 'b'.
+
+/**
+ * @param {string} s
+ * @param {string} p
+ * @return {boolean}
+ */
+var isMatch = function(s, p) {
+    let sIdx = 0, pIdx = 0;
+    let sStar = -1, pStar = -1;
+
+    while (sIdx < s.length) {
+        // Case 1: Characters match or pattern has '?'
+        if (pIdx < p.length && (s[sIdx] === p[pIdx] || p[pIdx] === '?')) {
+            sIdx++;
+            pIdx++;
+        } 
+        // Case 2: Pattern has '*'
+        else if (pIdx < p.length && p[pIdx] === '*') {
+            pStar = pIdx;      // Record '*' position
+            sStar = sIdx;      // Record current 's' position to backtrack to
+            pIdx++;            // Move pattern pointer; assume '*' matches 0 chars
+        } 
+        // Case 3: No match, but we encountered a '*' earlier
+        else if (pStar !== -1) {
+            pIdx = pStar + 1;  // Go back to pattern right after '*'
+            sStar++;           // '*' consumes one more char from 's'
+            sIdx = sStar;      // Reset sIdx to our new starting point
+        } 
+        // Case 4: No match and no '*' to fall back on
+        else {
+            return false;
+        }
+    }
+
+    // Check for remaining '*' in pattern (they can match empty sequences)
+    while (pIdx < p.length && p[pIdx] === '*') {
+        pIdx++;
+    }
+
+    return pIdx === p.length;
+};
